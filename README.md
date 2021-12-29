@@ -1,10 +1,22 @@
 # Azure Database for Mysql
 -----   
 ## 준비사항   
-+ [Mysqlworkbench](https://dev.mysql.com/downloads/workbench/)   
++ [Mysqlworkbench download](https://dev.mysql.com/downloads/workbench/)   
+  + [visual C++ redistributable for visual studio download](https://support.microsoft.com/ko-kr/help/2977003/the-latest-supported-visual-c-downloads) 
 
 ## 목차   
 
+Lab01. Azure Database for Mysql 배포   
+
+Lab02. 방화벽 설정 및 네트워크와 Service 엔드포인트 연결   
+
+Lab03. 접속 테스트 및 환경 변수 변경   
+
+Lab04. 특정 시점 복원   
+
+Lab05. 모니터링   
+
+Lab06. Repilcation   
 
 ## Lab01. Azure Database for Mysql 배포
 
