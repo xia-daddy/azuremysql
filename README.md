@@ -6,8 +6,8 @@
 
 ## 목차   
 
-1. [Azure Database for Mysql provisioning](#Lab01.-Azure-Database-for-Mysql-provisioning)   
-2. [Firewall setting and connect existing network to Service endpoint](#Lab02.-Firewall-setting-and-connect-existing-network-to-Service-endpoint)   
+1. [Azure Database for Mysql provisioning](#Lab01.-Azure-Database-for-Mysql-provisioning)
+2. [Firewall setting and connect existing network to Service endpoint](#Lab02.-Firewall-setting-and-connect-existing-network-to-Service-endpoint)
 3. [Access test and parameter variable change]
 4. [Restore]
 5. [Monitoring]
