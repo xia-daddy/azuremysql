@@ -6,21 +6,20 @@
 
 ## 목차   
 
-Lab01. Azure Database for Mysql 배포   
+1. [Azure Database for Mysql provisioning](#Lab01.-Azure-Database-for-Mysql-provisioning)   
+2. [Firewall setting and connect existing network to Service endpoint](#Lab02.-Firewall-setting-and-connect-existing-network-to-Service-endpoint)   
+3. [Access test and parameter variable change]
+4. [Restore]
+5. [Monitoring]
+6. [Scaling]
+7. [Repilcation] 
+  
 
-Lab02. 방화벽 설정 및 네트워크와 Service 엔드포인트 연결   
+-----
 
-Lab03. 접속 테스트 및 환경 변수 변경   
+## Lab01. Azure Database for Mysql provisioning
 
-Lab04. 특정 시점 복원   
-
-Lab05. 모니터링   
-
-Lab06. Repilcation   
-
-## Lab01. Azure Database for Mysql 배포
-
-### 단일 서버 배포 선택
+### 단일 서버 배포 방법을 알아봅니다.
 
 1. [Azure Portal 접속]   
 2. [리소스 만들기]   
@@ -49,7 +48,37 @@ Lab06. Repilcation
 
 10. [리소스로 이동을 클릭하여 리소스확인]
 
-![lab1_img07](https://user-images.githubusercontent.com/88179727/147628887-f222fb23-5798-4b86-b237-c87c92c790f0.png)
+![lab1_img07](https://user-images.githubusercontent.com/88179727/147628887-f222fb23-5798-4b86-b237-c87c92c790f0.png)   
+
+-----
+   
+## Lab02. Firewall setting and connect existing network to Service endpoint
+
+### 방화벽 규칙 추가   
+
+1. [DB리소스로 이동]   
+2. [설정 > 연결보안]   
+3. [방화벽 규칙 현재 클라이언트 IP 주소 추가 > 저장]   
+
+![lab2_img01](https://user-images.githubusercontent.com/88179727/147713343-40bb1028-387c-4e40-b581-40526e65a863.png)   
+
+### 기존 가상네트워크와의 연결   
+
+1. [DB리소스로 이동]   
+2. [설정 > 연결보안]   
+3. [VNET 규칙 > 기존 가상 네트워크 추가]   
+
+![lab2_img02](https://user-images.githubusercontent.com/88179727/147714245-da4fca90-f1cc-473d-9b65-3aa7f17793bf.png)   
+
+4. [연결 정보 입력후 확인 클릭]   
+5. [연결된 vnet 확인]   
+
+docs: <https://docs.microsoft.com/ko-kr/azure/mysql/concepts-data-access-and-security-vnet>   
+
++ Azure Database for MySQL은 기본적으로는 DNS 통신을 하며 방화벽으로 핸들링 됩니다.   
++ 기존 서비스와는 service endpoint를 통하여 서브넷간의 통신을 할 수 있고, Public ip로 통신도 가능 합니다.   
+
+
 
 
 
