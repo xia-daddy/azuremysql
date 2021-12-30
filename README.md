@@ -7,7 +7,7 @@
 ## 목차   
 
 1. [Azure Database for Mysql provisioning](#01)   
-2. [Firewall setting and connect existing network to Service endpoint](#Lab02)   
+2. [Firewall setting and connect existing network to Service endpoint](#02)   
 3. [Access test and parameter variable change]
 4. [Restore]
 5. [Monitoring]
@@ -51,7 +51,7 @@
 
 -----
    
-## Lab02. Firewall setting and connect existing network to Service endpoint
+## Lab02. Firewall setting and connect existing network to Service endpoint<a name="02"></a>
 
 ### 방화벽 규칙 추가   
 
