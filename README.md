@@ -6,18 +6,17 @@
 
 ## 목차   
 
-1. [Azure Database for Mysql provisioning](#lab01.-azure-database-for-mysql-provisioning)   
+1. [Azure Database for Mysql provisioning](#Lab01.-Azure-Database-for-Mysql-provisioning)   
 2. [Firewall setting and connect existing network to Service endpoint](#Lab02.-Firewall-setting-and-connect-existing-network-to-Service-endpoint)   
 3. [Access test and parameter variable change]
 4. [Restore]
 5. [Monitoring]
 6. [Scaling]
-7. [Repilcation] 
-  
+7. [Repilcation]   
 
 -----
 
-## Lab01. azure database for mysql provisioning
+## Lab01. Azure Database for Mysql provisioning
 
 ### 단일 서버 배포 방법을 알아봅니다.
 
