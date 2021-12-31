@@ -8,11 +8,11 @@
 
 1. [Azure Database for Mysql provisioning](#01)   
 2. [Firewall setting and connect existing network to Service endpoint](#02)   
-3. [Access test and parameter variable change]
-4. [Restore]
-5. [Monitoring]
-6. [Scaling]
-7. [Repilcation]   
+3. [Access test and parameter variable change](#03)
+4. [Restore](#04)
+5. [Monitoring](#05)
+6. [Scaling](#06)
+7. [Repilcation](#07)  
 
 -----
 
@@ -77,6 +77,18 @@ docs: <https://docs.microsoft.com/ko-kr/azure/mysql/concepts-data-access-and-sec
 + Azure Database for MySQL은 기본적으로는 DNS 통신을 하며 방화벽으로 핸들링 됩니다.   
 + 기존 서비스와는 service endpoint를 통하여 서브넷간의 통신을 할 수 있고, Public ip로 통신도 가능 합니다.   
 
+### Private 
+
+
+## Lab03. Access test and parameter variable change<a name="03"></a>
+
+## Lab04. Restore<a name="04"></a>
+
+## Lab05. Monitoring<a name="05"></a>
+
+## Lab06. Scaling<a name="06"></a>
+
+## Lab07. Replication<a name="07"></a>
 
 
 
