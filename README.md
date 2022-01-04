@@ -4,6 +4,17 @@
 + [Mysqlworkbench download](https://dev.mysql.com/downloads/workbench/)   
   + [visual C++ redistributable for visual studio download](https://support.microsoft.com/ko-kr/help/2977003/the-latest-supported-visual-c-downloads) 
 
+## 제약사항
+
+mysql이 지원하는 많은 storage engine 중 지원하는 engine은 아래 2가지 engine만 지원하고 MyISAM등의 엔진은 지원하지 않음.
+
++ InnoDB
++ MEMORY
+
+이외의 제약사항은 아래 docs 참조
+
+docs : <https://docs.microsoft.com/ko-kr/azure/mysql/concepts-limits>
+
 ## 목차   
 
 1. [Azure Database for Mysql provisioning](#01)   
@@ -92,15 +103,43 @@ docs: <docs : https://docs.microsoft.com/ko-kr/azure/mysql/concepts-data-access-
 
 3. [프라이빗 엔드포인트 기본사항 입력 > 다음]
 
+|설정|값|
+|:---|:---|
+|프로젝트 세부 정보| |	
+|Subscription|	구독을 선택합니다.|
+|Resource group|	myResourceGroup 을 선택합니다. 이전 섹션에서 만든 것입니다.|
+|인스턴스 세부 정보| |	
+|Name|	myPrivateEndpoint 를 입력합니다. 이 이름을 사용하는 경우 고유한 이름을 만듭니다.|
+|지역|	지역 를 선택합니다.|
+
 ![lab2_img04](https://user-images.githubusercontent.com/88179727/147808029-8578bbab-c411-4c86-a456-b18f8050d7c7.png)
 
 4. [생성할 엔드포인트 리소스 선택 > 다음] 
 
+|설정|값|
+|:---|:---|
+|연결 방법|내 디렉터리의 Azure 리소스에 연결하도록 선택합니다.|
+|Subscription|구독을 선택합니다.|
+|리소스 유형|Microsoft DBforMySQL/servers 를 선택 합니다.|
+|리소스|myServer 를 선택합니다.|
+|대상 하위 리소스|Mysqlserver 를 선택 합니다.|
+
+
 ![lab2_img05](https://user-images.githubusercontent.com/88179727/147809043-3d15a537-0d51-4abc-b664-28dd62b9b4e6.png)
 
-5. [가상 네트워크 및 서브넷 선택 > 다음]   
+5. [가상 네트워크 및 서브넷 선택 > 다음]  
+
+|설정|값|
+|:---|:---|
+|네트워킹| |	
+|가상 네트워크|	MyVirtualNetwork 를 선택합니다.|
+|서브넷|	mySubnet 을 선택합니다.|
+|프라이빗 DNS 통합| |	
+|프라이빗 DNS 영역과 통합|	아니오 를 선택합니다.|
+|프라이빗 DNS 영역|	|
 
 ![lab2_img06](https://user-images.githubusercontent.com/88179727/147809484-9acb09d8-e8ad-4e91-9f27-1364300831e4.png)   
+
 
 6. [검토 및 만들기 > 만들기]   
 
@@ -8178,28 +8217,135 @@ DROP TABLE classicmodels.payments;
 
 3. [복원된 DB로 접속하여 삭제된 데이터가 복구되었는지 확인]   
 
-새로 복원된 서버는 방화벽의 정보는 가져오지만 설정한 Vnet 규칙은 가져오지 않습니다.
-기존과 동일하게 신규 서버에 대한 Vnet Rule을 추가 합니다.
-
 <pre>
 <code>
 SELECT * FROM classicmodels.payments;
 </code>
 </pre>
 
-![lab4_img03](https://user-images.githubusercontent.com/88179727/147914998-6f2027e2-af3f-430d-992d-6cc64e1dbfb1.png)
+![lab4_img03](https://user-images.githubusercontent.com/88179727/147914998-6f2027e2-af3f-430d-992d-6cc64e1dbfb1.png)   
+
+
+새로 복원된 서버는 방화벽의 정보는 가져오지만 설정한 Vnet 규칙은 가져오지 않습니다.
+기존과 동일하게 신규 서버에 대한 Vnet Rule을 추가 합니다.
 
 
 ## Lab05. Monitoring<a name="05"></a>
 
+### Slow Query 모니터링 
 
+1. [서버 매개 변수 설정에서 다음 설정을 변경]   
+ 
++ log_output : file
++ long_query_time : 1
++ slow_query_log : ON 
+
+2. [MySQL Workbench에서 5초 이상 걸리는 쿼리를 사용]   
+
+<pre>
+<code>
+SELECT /*+ MAX_EXECUTION_TIME(5000) */ 1 
+FROM classicmodels.customers WHERE SLEEP(5);
+</code>
+</pre>
+
+3. [서버 로그에서 생성된 로그 파일을 다운]   
+
+![lab5_img01](https://user-images.githubusercontent.com/88179727/148010241-d4806280-8c0b-4c61-bf60-49ebc346f0df.png)
+
+4. [다운로드 된 파일을 열어 슬로우쿼리가 잘 적재되었는지 확인]   
+
+<pre>
+<code>
+c:\mysql\bin\mysqld.exe, Version: 5.7.32-log (MySQL Community Server (GPL)). started with:
+TCP Port: 20173, Named Pipe: /tmp/mysql.sock
+Time                 Id Command    Argument
+# Time: 2022-01-04T04:32:42.901508Z
+# User@Host: myadmin[myadmin] @  [xxx.xxx.xx.xx]  Id:    21
+# Query_time: 5.000054  Lock_time: 0.140626 Rows_sent: 0  Rows_examined: 0
+SET timestamp=1641270762;
+SELECT /*+ MAX_EXECUTION_TIME(5000) */ 1 
+FROM classicmodels.customers WHERE SLEEP(5)
+LIMIT 0, 1000;
+</code>
+</pre>
+
+### 서버 리소스 모니터링   
+
+1. [모니터링 > 메트릭 > 메트릭 추가]   
+
+![lab5_img02](https://user-images.githubusercontent.com/88179727/148012191-de021573-9a65-4a51-83ad-d0ad142f3617.png)
+
+2. [메트릭 선택에서 확인할 메트릭 정보를 선택]
+
+![lab5_img03](https://user-images.githubusercontent.com/88179727/148012417-14c5acd4-bce9-4bc6-90fb-3c31d8985032.png)
+
++ 여러 메트릭 정보를 추가하려면 메트릭 추가를 반복 추가합니다.
+
+3. [모니터링 할 시간대를 선택하여 확인 가능]   
+
+![lab5_img04](https://user-images.githubusercontent.com/88179727/148012970-c2721399-16e6-4ce4-a9c2-088bed67a4b7.png)
+
+### CPU 사용률
+Cpu 사용량을 모니터링 하 고 데이터베이스가 CPU 리소스를 소모 하 고 있는지 여부를 모니터링 합니다. CPU 사용률이 90% 이상이 면 vCores의 수를 늘리거나 다음 가격 책정 계층으로 확장 하 여 계산을 확장 해야 합니다. CPU를 확장/축소할 때 처리량 또는 동시성이 예상 대로 작동 하는지 확인 합니다.
+
+### 메모리
+데이터베이스 서버에 사용할 수 있는 메모리 양은 vcores 수에 비례 합니다. 메모리가 작업에 충분 한지 확인 합니다. 응용 프로그램을 부하 테스트 하 여 읽기 및 쓰기 작업을 위한 메모리가 충분 한지 확인 합니다. 데이터베이스 메모리 소비가 정의 된 임계값을 초과 하는 경우가 자주 증가 하는 경우 vCores 이상 성능 계층을 증가 시켜 인스턴스를 업그레이드 해야 함을 나타냅니다. 쿼리 저장소, 쿼리 성능 권장 사항을 사용 하 여 가장 긴 기간의 쿼리를 식별 합니다. 최적화할 수 있는 기회를 살펴보세요.
+
+### Storage
+MySQL 서버에 대해 프로 비전 된 저장소의 양에 따라 서버에 대 한 IOPs가 결정 됩니다. 서비스에서 사용 하는 저장소에는 데이터베이스 파일, 트랜잭션 로그, 서버 로그 및 백업 스냅숏이 포함 됩니다. 사용 된 디스크 공간이 총 프로 비전 된 디스크 공간의 85%를 초과 하지 않도록 합니다. 이 경우에는 데이터베이스 서버에서 데이터를 삭제 하거나 보관 하 여 공간을 확보 해야 합니다.
+
+### 네트워크 트래픽
+네트워크 수신 처리량, 네트워크 전송 처리량 – 초당 메가바이트 단위에서 들어오고 나가는 네트워크 트래픽 속도입니다. 서버에 대 한 처리량 요구 사항을 평가 하 고 처리량이 예상 보다 낮은 경우 지속적으로 트래픽을 모니터링 해야 합니다.
+
+### 데이터베이스 연결
+데이터베이스 연결 -Azure Database for MySQL에 연결 된 클라이언트 세션 수는 선택한 SKU 크기에 대 한 연결 제한과 맞춰야 합니다.
+   
+
+|메트릭|	메트릭 표시 이름|	단위|	설명|
+|:--|:--|:--|:--|
+|cpu_percent|	CPU 백분율|	백분율|	사용 중인 CPU의 비율|
+|memory_percent|	메모리 백분율|	백분율|	사용 중인 메모리의 비율|
+|io_consumption_percent|	IO 백분율|	백분율|	사용 중인 IO의 비율 (기본 계층 서버에는 적용 되지 않음)|
+|storage_percent|	스토리지 비율|	백분율|	서버의 최대값을 초과하여 사용된 스토리지의 비율|
+|storage_used|	스토리지 사용됨|	바이트|	사용 중인 스토리지의 양 서비스에서 사용되는 스토리지에는 데이터베이스 파일, 트랜잭션 로그 및 서버 로그가 포함될 수 있습니다.|
+|serverlog_storage_percent|	서버 로그 스토리지 비율|	백분율|	서버의 최대 서버 로그 스토리지에서 사용된 서버 로그 스토리지의 백분율입니다.|
+|serverlog_storage_percent|	사용된 서버 로그 스토리지|	바이트|	서버 로그 스토리지에서 사용된 크기입니다.|
+|serverlog_storage_limit|	서버 로그 스토리지 제한|	바이트|	이 서버에 대한 서버 로그 스토리지의 최대 크기입니다.|
+|storage_limit|	스토리지 제한|	바이트|	이 서버의 최대 스토리지|
+|active_connections|	활성 연결 수|	개수|	서버에 대한 활성 연결 수|
+|connections_failed|	실패한 연결|	개수|	서버에 대해 실패한 연결 수|
+|seconds_behind_master|	복제 지연 시간(초)|	개수|	원본 서버에 대해 복제본 서버가 지연 된 시간 (초)입니다. (기본 계층 서버에는 적용 되지 않음)|
+|network_bytes_egress|	네트워크 아웃|	바이트|	활성 연결을 통한 네트워크 출력의 크기입니다.|
+|network_bytes_ingress|	네트워크 인|	바이트|	활성 연결을 통한 네트워크 입력의 크기입니다.|
+|backup_storage_used|	사용된 백업 스토리지|	바이트|	사용된 백업 스토리지 양. 이 메트릭은 서버에 대해 설정 된 백업 보존 기간에 따라 유지 되는 모든 전체 데이터베이스 백업, 차등 백업 및 로그 백업에서 사용 하는 저장소의 합계를 나타냅니다. 백업 빈도는 서비스에서 관리 되며 개념 문서에서 설명 합니다. 지역 중복 저장소의 경우 백업 저장소 사용량이 로컬 중복 저장소의 두 배가 됩니다.|
 
 
 ## Lab06. Scale Up-Down Azure Database for MySQL<a name="06"></a>
 
+1. [Azure Potal의 Mysql 리소스로 이동]   
+
+2. [설정의 가격 책정 계층 선택]   
+
+3. [드래그로 원하는 스펙을 알맞게 적용후 확인]
+
+![lab6_img01](https://user-images.githubusercontent.com/88179727/148014948-85017596-1966-4c13-aa04-657116c94c1d.png)
+
++ Azrue Database for Mysql 의 최대 Sku
++ vCore : 64
++ Storage : 16 TB 
++ backup : 35 Day
+
+4. [배포 완료후 개요에서 변경된 Mysql Sku 를 확인]   
+
++ Sclae up & down 시에는 기존에 연결된 싱크가 끊어집니다.    
++ vCore Sku 는 up & down 으로 조정할 수 있으나 Storage 는 down 이 불가 합니다.
+
+
 ## Lab07. Replication<a name="07"></a>
 
-
+Azure Database for MySQL은 읽기 복제를 지원 합니다
+읽기 전용 복제본은 마스터 노드와 동일 지역에 생성할 수도 있으며 다른 데이터센터에 생성할 수도 있습니다
 
 
 
