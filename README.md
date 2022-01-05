@@ -8363,9 +8363,18 @@ Azure Database for MySQL은 읽기 복제를 지원 합니다. 원본 서버에�
 
 1. [Azure Potal의 Mysql 리소스로 이동]   
 
-2. [상단의 ] 
+2. [설정 > 복제 카테고리 상단 복제본 추가]   
 
-![lab7_img01](https://user-images.githubusercontent.com/88179727/148032436-ebacd04b-95a8-41c7-90ae-7a173a15ccac.png)
+![lab7_img01](https://user-images.githubusercontent.com/88179727/148032436-ebacd04b-95a8-41c7-90ae-7a173a15ccac.png)   
+
+3. [생성할 복제본 이름과 지역 선택 > 확인]   
+
+![lab7_img02](https://user-images.githubusercontent.com/88179727/148036806-1c708523-21f9-4cec-8df4-842d3280b401.png)
+
+4. [생성후 활성화 된 복제본 확인]
+
+![lab7_img03](https://user-images.githubusercontent.com/88179727/148038115-d863eeef-d5d3-494e-b0dc-a1efa1232a7d.png)
+
 
 
 
