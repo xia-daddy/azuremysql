@@ -8379,6 +8379,10 @@ Azure Database for MySQL은 읽기 복제를 지원 합니다. 원본 서버에�
 
 <pre>
 <code>
+-- 데이터 복제 확인
+select * from classicmodels.orders limit 10;
+
+-- 복제상태 확인
 show slave status;
 </code>
 </pre>
@@ -8386,6 +8390,25 @@ show slave status;
 + Slave_IO_Running와 Slave_SQL_Running이 모두 Yes,
 + Read_Master_Log_Pos와 Exec_Master_Log_Pos 값이 일치,
 + Last_Errno는 0, Last_Error는 공란, Seconds_Behind_Master이 0이면 정상 복제중
+
+6. [원본서버에서 데이터 조작후 복제서버 적용 확인]   
+
+<pre>
+<code>
+-- 원본서버
+create database testdb;
+use testdb;
+create table dummy_table (
+x int,
+y int);
+insert into dummy_table (x, y) values (1, 2);
+select * from dummy_table;
+
+-- 복제서버
+use testdb;
+select * from dummy_table;
+</code>
+</pre>
 
 
 
