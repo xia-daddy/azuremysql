@@ -8375,6 +8375,17 @@ Azure Database for MySQL은 읽기 복제를 지원 합니다. 원본 서버에�
 
 ![lab7_img03](https://user-images.githubusercontent.com/88179727/148038115-d863eeef-d5d3-494e-b0dc-a1efa1232a7d.png)
 
+5. [복제본 서버에 접속하여 복제 상태 확인]   
+
+<pre>
+<code>
+show slave status;
+</code>
+</pre>
+
++ Slave_IO_Running와 Slave_SQL_Running이 모두 Yes,
++ Read_Master_Log_Pos와 Exec_Master_Log_Pos 값이 일치,
++ Last_Errno는 0, Last_Error는 공란, Seconds_Behind_Master이 0이면 정상 복제중
 
 
 
