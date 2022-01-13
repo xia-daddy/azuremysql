@@ -8676,7 +8676,24 @@ CREATE TABLE `products` (
 </div>
 </details>
 
+-----
 
+![lab8_img09](https://user-images.githubusercontent.com/88179727/149264795-8140e179-346f-4464-889d-519e21ed20b3.png)
+
+11. [필요한 테이블을 선택 > 다음:마이그레이션 설정 구성 > 다음: 요약]   
++ 세부 설정을 위한 고급 마이그레이션 설정이 있으나 본 LAB 에서는 패스 합니다.
+
+![lab8_img10](https://user-images.githubusercontent.com/88179727/149264982-0bebafa7-75f2-421d-8457-4a65a0c986b4.png)
+
+12. [작업 이름을 지정한 후 마이그레이션 시작]   
+
+![lab8_img11](https://user-images.githubusercontent.com/88179727/149265352-db094d56-e060-4efd-8d18-2b39c2ff9ebd.png)
+
+13. [마이그레이션 완료 확인]   
+
+![lab8_img12](https://user-images.githubusercontent.com/88179727/149266038-6466bd06-d752-41bd-9f67-a606bc093903.png)
+
++ 상태 값이 변화하면서 완료됨 으로 나오면 마이그레이션이 정상적으로 수행된 것입니다. 타겟 DB에서 데이터가 정상적으로 들어왔는지 확인합니다. 
 
 
 
