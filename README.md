@@ -8692,7 +8692,6 @@ CREATE TABLE `products` (
 13. [마이그레이션 완료 확인]   
 
 ![lab8_img12](https://user-images.githubusercontent.com/88179727/149266038-6466bd06-d752-41bd-9f67-a606bc093903.png)
-
 + 상태 값이 변화하면서 완료됨 으로 나오면 마이그레이션이 정상적으로 수행된 것입니다. 타겟 DB에서 데이터가 정상적으로 들어왔는지 확인합니다. 
 
 
