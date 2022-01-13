@@ -24,6 +24,7 @@ docs : <https://docs.microsoft.com/ko-kr/azure/mysql/concepts-limits>
 5. [Monitoring](#05)   
 6. [Scale Up-Down Azure Database for MySQL](#06)   
 7. [Repilcation](#07)  
+8. [Migration](#08)
 
 -----
 
@@ -8389,8 +8390,9 @@ show slave status;
 
 + Slave_IO_Running와 Slave_SQL_Running이 모두 Yes,
 + Read_Master_Log_Pos와 Exec_Master_Log_Pos 값이 일치,
-+ Last_Errno는 0, Last_Error는 공란, Seconds_Behind_Master이 0이면 정상 복제중
-
++ Last_Errno는 0, Last_Error는 공란, Seconds_Behind_Master이 0이면 정상 복제중   
+   
+   
 6. [원본서버에서 데이터 조작후 복제서버 적용 확인]   
 
 <pre>
@@ -8409,6 +8411,274 @@ use testdb;
 select * from dummy_table;
 </code>
 </pre>
+
+
+## Lab08. Migration<a name="08"></a>
+
+### Azure DMS를 이용하여 데이터를 마이그레이션 하는 방법을 알아봅니다.   
+
+### Azure DMS를 이용한 마이그레이션
+
+1. [Azure 마켓플레이스의 DMS 리소스 생성으로 이동]   
+
+2. [Mysql 타겟을 선택 > 선택]   
+
+![lab8_img01](https://user-images.githubusercontent.com/88179727/149249485-8d63f712-98ad-406f-9462-9a8f416c04c1.png)
+
+3. [리소스 그룹 선택 > 서비스 이름 입력 > 다음:네트워킹]   
++ 가격 계층의 Standard 는 오프라인 마이그레이션을 지원하고 Primium 은 온라인 마이그레이션을 지원
+
+![lab8_img02](https://user-images.githubusercontent.com/88179727/149249872-9d358d5c-2be8-42a9-950d-fdbd7da37bf8.png)
+
+4. [기존의 가상네트워크를 선택하거나 새로 생성 > 검토+만들기]
+
+![lab8_img03](https://user-images.githubusercontent.com/88179727/149250105-6e4193fc-6f40-4544-bd33-1cdcc2eb5334.png)
+
+5. [전체 Summay 를 확인 > 만들기]
+
+![lab8_img04](https://user-images.githubusercontent.com/88179727/149250215-e2709a60-3a37-4683-8d97-5fff72087718.png)
+
+6. [DMS 생성후 리소스 화면 이동 > 새 마이그레이션 프로젝트]
+
+![lab8_img05](https://user-images.githubusercontent.com/88179727/149251726-7fa7a34e-6668-4e9d-b098-09c6f16bc77d.png)
+
+7. [프로젝트 생성 정보 입력]
+
+![lab8_img06](https://user-images.githubusercontent.com/88179727/149251783-03ff4c2f-8fa5-40a4-b0b7-2a98a5544c43.png)
+
+8. [소스 데이터베이스 정보 입력 > 다음:대상 선택]
+
++ 편의상 소스는 원래 생성해두었던 원본 DB를 대상으로 합니다.
+![lab8_img07](https://user-images.githubusercontent.com/88179727/149251999-2b27e4c9-207e-4395-bd04-ee33e4757e8e.png)
+
+9. [타겟 데이터베이스 정보 입력 > 다음:데이터베이스 선택]
+
++ 대상으로 지정할 데이터베이스가 필요합니다. LAB1 에서 배포한 것처럼 새로운 데이터베이스를 이번엔 유연한 서버로 구성해보세요.   
+
+![lab8_img08](https://user-images.githubusercontent.com/88179727/149255044-213a6965-766d-478b-87c3-455a5cff01c5.png)
+
+10. [마이그레이션 대상 데이터베이스 스키마를 선택 > 다음:테이블 선택]   
+
++ 제약사항: DMS 를 이용한 마이그레이션은 타겟DB에 원본과 동일한 스키마가 미리 생성되어 있어야 합니다.
++ 워크벤치를 사용해 추출이 가능하지만 편의상 아래에 추출한 스키마 구문을 이용해 타겟DB의 워크벤치에서 실행한 후 진행해 보세요.
+
+-----
+
+<details>
+<summary>스키마DUMP 펼치기</summary>
+<div markdown="1">
+
+<pre>
+<code>
+
+CREATE DATABASE  IF NOT EXISTS `classicmodels` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `classicmodels`;
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
+--
+-- Host: jh-test-my.mysql.database.azure.com    Database: classicmodels
+-- ------------------------------------------------------
+-- Server version	5.6.47.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customers` (
+  `customerNumber` int(11) NOT NULL,
+  `customerName` varchar(50) NOT NULL,
+  `contactLastName` varchar(50) NOT NULL,
+  `contactFirstName` varchar(50) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `addressLine1` varchar(50) NOT NULL,
+  `addressLine2` varchar(50) DEFAULT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `postalCode` varchar(15) DEFAULT NULL,
+  `country` varchar(50) NOT NULL,
+  `salesRepEmployeeNumber` int(11) DEFAULT NULL,
+  `creditLimit` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`customerNumber`),
+  KEY `salesRepEmployeeNumber` (`salesRepEmployeeNumber`),
+  CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`salesRepEmployeeNumber`) REFERENCES `employees` (`employeeNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `employees`
+--
+
+DROP TABLE IF EXISTS `employees`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `employees` (
+  `employeeNumber` int(11) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `firstName` varchar(50) NOT NULL,
+  `extension` varchar(10) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `officeCode` varchar(10) NOT NULL,
+  `reportsTo` int(11) DEFAULT NULL,
+  `jobTitle` varchar(50) NOT NULL,
+  PRIMARY KEY (`employeeNumber`),
+  KEY `reportsTo` (`reportsTo`),
+  KEY `officeCode` (`officeCode`),
+  CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`reportsTo`) REFERENCES `employees` (`employeeNumber`),
+  CONSTRAINT `employees_ibfk_2` FOREIGN KEY (`officeCode`) REFERENCES `offices` (`officeCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `offices`
+--
+
+DROP TABLE IF EXISTS `offices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `offices` (
+  `officeCode` varchar(10) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `addressLine1` varchar(50) NOT NULL,
+  `addressLine2` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `country` varchar(50) NOT NULL,
+  `postalCode` varchar(15) NOT NULL,
+  `territory` varchar(10) NOT NULL,
+  PRIMARY KEY (`officeCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `orderdetails`
+--
+
+DROP TABLE IF EXISTS `orderdetails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orderdetails` (
+  `orderNumber` int(11) NOT NULL,
+  `productCode` varchar(15) NOT NULL,
+  `quantityOrdered` int(11) NOT NULL,
+  `priceEach` decimal(10,2) NOT NULL,
+  `orderLineNumber` smallint(6) NOT NULL,
+  PRIMARY KEY (`orderNumber`,`productCode`),
+  KEY `productCode` (`productCode`),
+  CONSTRAINT `orderdetails_ibfk_1` FOREIGN KEY (`orderNumber`) REFERENCES `orders` (`orderNumber`),
+  CONSTRAINT `orderdetails_ibfk_2` FOREIGN KEY (`productCode`) REFERENCES `products` (`productCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `orderNumber` int(11) NOT NULL,
+  `orderDate` date NOT NULL,
+  `requiredDate` date NOT NULL,
+  `shippedDate` date DEFAULT NULL,
+  `status` varchar(15) NOT NULL,
+  `comments` text,
+  `customerNumber` int(11) NOT NULL,
+  PRIMARY KEY (`orderNumber`),
+  KEY `customerNumber` (`customerNumber`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customerNumber`) REFERENCES `customers` (`customerNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments` (
+  `customerNumber` int(11) NOT NULL,
+  `checkNumber` varchar(50) NOT NULL,
+  `paymentDate` date NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`customerNumber`,`checkNumber`),
+  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`customerNumber`) REFERENCES `customers` (`customerNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `productlines`
+--
+
+DROP TABLE IF EXISTS `productlines`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `productlines` (
+  `productLine` varchar(50) NOT NULL,
+  `textDescription` varchar(4000) DEFAULT NULL,
+  `htmlDescription` mediumtext,
+  `image` mediumblob,
+  PRIMARY KEY (`productLine`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `products` (
+  `productCode` varchar(15) NOT NULL,
+  `productName` varchar(70) NOT NULL,
+  `productLine` varchar(50) NOT NULL,
+  `productScale` varchar(10) NOT NULL,
+  `productVendor` varchar(50) NOT NULL,
+  `productDescription` text NOT NULL,
+  `quantityInStock` smallint(6) NOT NULL,
+  `buyPrice` decimal(10,2) NOT NULL,
+  `MSRP` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`productCode`),
+  KEY `productLine` (`productLine`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`productLine`) REFERENCES `productlines` (`productLine`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+
+</code>
+</pre>  
+
+</div>
+</details>
+
+
+
+
 
 
 
