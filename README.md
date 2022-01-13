@@ -8422,7 +8422,7 @@ select * from dummy_table;
 1. [Azure 마켓플레이스의 DMS 리소스 생성으로 이동]   
 
 2. [Mysql 타겟을 선택 > 선택]   
-
++ DMS 는 SQL, PostgreSQL, MySQL, MongoDB, RDS(SQL,PostgreSQL) 을 지원합니다.  
 ![lab8_img01](https://user-images.githubusercontent.com/88179727/149249485-8d63f712-98ad-406f-9462-9a8f416c04c1.png)
 
 3. [리소스 그룹 선택 > 서비스 이름 입력 > 다음:네트워킹]   
