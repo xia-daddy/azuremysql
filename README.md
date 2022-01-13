@@ -8447,9 +8447,9 @@ select * from dummy_table;
 
 ![lab8_img06](https://user-images.githubusercontent.com/88179727/149251783-03ff4c2f-8fa5-40a4-b0b7-2a98a5544c43.png)
 
-8. [소스 데이터베이스 정보 입력 > 다음:대상 선택]
-
+8. [소스 데이터베이스 정보 입력 > 다음:대상 선택]   
 + 편의상 소스는 원래 생성해두었던 원본 DB를 대상으로 합니다.
+
 ![lab8_img07](https://user-images.githubusercontent.com/88179727/149251999-2b27e4c9-207e-4395-bd04-ee33e4757e8e.png)
 
 9. [타겟 데이터베이스 정보 입력 > 다음:데이터베이스 선택]
@@ -8692,6 +8692,7 @@ CREATE TABLE `products` (
 
 13. [마이그레이션 완료 확인]   
 + 상태 값이 변화하면서 완료됨 으로 나오면 마이그레이션이 정상적으로 수행된 것입니다. 타겟 DB에서 데이터가 정상적으로 들어왔는지 확인합니다.
+
 ![lab8_img12](https://user-images.githubusercontent.com/88179727/149266038-6466bd06-d752-41bd-9f67-a606bc093903.png)
  
 
