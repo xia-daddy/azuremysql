@@ -159,6 +159,7 @@ docs: <docs : https://docs.microsoft.com/ko-kr/azure/mysql/concepts-data-access-
 
 ![lab2_img10](https://user-images.githubusercontent.com/88179727/147904612-777d7b71-523e-45bc-94b2-2c029304b779.png)   
 
+-----
 
 ## Lab03. Configure the connection and parameter variable change<a name="03"></a>
    
@@ -236,6 +237,7 @@ az mysql server configuration set --name collation_server --resource-group $reso
 </code>
 </pre>
 
+-----
 
 ## Lab04. Restore<a name="04"></a>
 
@@ -8230,6 +8232,7 @@ SELECT * FROM classicmodels.payments;
 새로 복원된 서버는 방화벽의 정보는 가져오지만 설정한 Vnet 규칙은 가져오지 않습니다.
 기존과 동일하게 신규 서버에 대한 Vnet Rule을 추가 합니다.
 
+-----
 
 ## Lab05. Monitoring<a name="05"></a>
 
@@ -8321,6 +8324,7 @@ MySQL 서버에 대해 프로 비전 된 저장소의 양에 따라 서버에 �
 |network_bytes_ingress|	네트워크 인|	바이트|	활성 연결을 통한 네트워크 입력의 크기입니다.|
 |backup_storage_used|	사용된 백업 스토리지|	바이트|	사용된 백업 스토리지 양. 이 메트릭은 서버에 대해 설정 된 백업 보존 기간에 따라 유지 되는 모든 전체 데이터베이스 백업, 차등 백업 및 로그 백업에서 사용 하는 저장소의 합계를 나타냅니다. 백업 빈도는 서비스에서 관리 되며 개념 문서에서 설명 합니다. 지역 중복 저장소의 경우 백업 저장소 사용량이 로컬 중복 저장소의 두 배가 됩니다.|
 
+-----
 
 ## Lab06. Scale Up-Down Azure Database for MySQL<a name="06"></a>
 
@@ -8342,6 +8346,7 @@ MySQL 서버에 대해 프로 비전 된 저장소의 양에 따라 서버에 �
 + Sclae up & down 시에는 기존에 연결된 싱크가 끊어집니다.    
 + vCore Sku 는 up & down 으로 조정할 수 있으나 Storage 는 down 이 불가 합니다.
 
+-----
 
 ## Lab07. Replication<a name="07"></a>
 
@@ -8412,6 +8417,7 @@ select * from dummy_table;
 </code>
 </pre>
 
+-----
 
 ## Lab08. Migration<a name="08"></a>
 
